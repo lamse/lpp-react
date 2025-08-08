@@ -2,7 +2,8 @@ import React from 'react';
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import {LoginForm} from "../model/Login";
+import {LoginForm, LoginResponseDto} from "../model/Login";
+import {ApiResponse} from "../model/ApiResponse";
 
 const Login: React.FC = () => {
   const initialValues: LoginForm = {
@@ -15,15 +16,23 @@ const Login: React.FC = () => {
     password: Yup.string().required('Please enter your password.'),
   });
 
-  const handleSubmit = async (values: LoginForm, { setSubmitting }: FormikHelpers<LoginForm>) => {
+  const handleSubmit = async (values: LoginForm, { setSubmitting, setErrors }: FormikHelpers<LoginForm>) => {
     try {
-      const response = await axios.post<LoginForm>('/api/login', values);
-      const loginForm: LoginForm = response.data;
-      console.log(loginForm);
+      const response = await axios.post<ApiResponse<LoginResponseDto>>(`${process.env.REACT_APP_API_URL}/login`, values);
+      const apiResponse: ApiResponse<LoginResponseDto> = response.data;
+      console.log(apiResponse);
       alert('Login successful!');
     } catch (error) {
-      console.error('There was an error!', error);
-      alert('Login failed!');
+      if (axios.isAxiosError(error) && error.response) {
+        const apiResponse = error.response.data as ApiResponse<null>;
+        if (apiResponse && apiResponse.errors) {
+          setErrors(apiResponse.errors);
+        }
+      } else {
+        console.error('There was an error!', error);
+        alert('An unexpected error occurred!');
+      }
+    } finally {
       setSubmitting(false);
     }
 
@@ -41,8 +50,11 @@ const Login: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors, touched }) => (
             <Form className="space-y-6">
+              {(errors as { global?: string }).global && (
+                <div className="text-red-500 text-xs mt-1">{(errors as { global?: string }).global}</div>
+              )}
               <div>
                 <div className="flex items-center justify-between">
                   <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 justify-between">Email address</label>
