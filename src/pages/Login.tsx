@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios';
-import {LoginForm, LoginResponseDto} from "../model/Login";
+import {LoginForm, UserDto} from "../model/Login";
 import {ApiResponse} from "../model/ApiResponse";
 import useAuthStore from '../store/auth';
 
@@ -29,8 +29,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: LoginForm, { setSubmitting, setErrors }: FormikHelpers<LoginForm>) => {
     try {
-      const response = await axios.post<ApiResponse<LoginResponseDto>>(`${process.env.REACT_APP_API_URL}/login`, values);
-      const apiResponse: ApiResponse<LoginResponseDto> = response.data;
+      const response = await axios.post<ApiResponse<UserDto>>(`${process.env.REACT_APP_API_URL}/login`, values);
+      const apiResponse: ApiResponse<UserDto> = response.data;
       console.log(apiResponse);
       login();
     } catch (error) {

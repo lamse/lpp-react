@@ -4,7 +4,8 @@ export type LoginForm = {
 }
 
 
-export type LoginResponseDto = {
+export type UserDto = {
+  id: number;
   email: string;
   name: string;
 }
