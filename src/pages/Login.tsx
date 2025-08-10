@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
+import axios from '../api/axios';
 import {LoginForm, LoginResponseDto} from "../model/Login";
 import {ApiResponse} from "../model/ApiResponse";
 import useAuthStore from '../store/auth';
@@ -61,7 +61,7 @@ const Login: React.FC = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ isSubmitting, errors }) => (
             <Form className="space-y-6">
               {(errors as { global?: string }).global && (
                 <div className="text-red-500 text-xs mt-1">{(errors as { global?: string }).global}</div>

@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import TechStackModal from "./TechStackModal";
 import useAuthStore from "../store/auth";
-import axios from "axios";
+import axios from "../api/axios";
 
 const Gnb = () => {
   const { isLoggedIn, logout } = useAuthStore();
