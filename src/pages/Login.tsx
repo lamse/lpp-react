@@ -1,11 +1,22 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import {LoginForm, LoginResponseDto} from "../model/Login";
 import {ApiResponse} from "../model/ApiResponse";
+import useAuthStore from '../store/auth';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuthStore();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/lpp-react');
+    }
+  }, [isLoggedIn, navigate]);
+
   const initialValues: LoginForm = {
     email: '',
     password: '',
@@ -21,7 +32,7 @@ const Login: React.FC = () => {
       const response = await axios.post<ApiResponse<LoginResponseDto>>(`${process.env.REACT_APP_API_URL}/login`, values);
       const apiResponse: ApiResponse<LoginResponseDto> = response.data;
       console.log(apiResponse);
-      alert('Login successful!');
+      login();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const apiResponse = error.response.data as ApiResponse<null>;
