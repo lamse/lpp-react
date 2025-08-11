@@ -2,8 +2,8 @@ import React from 'react';
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import axios from '../../api/axios';
-import {ProductForm} from "../../model/Product";
 import withAuth from '../../components/withAuth';
+import {ProductForm} from "../../interfaces/product.interface";
 
 const AddProduct: React.FC = () => {
   const initialValues: ProductForm = {

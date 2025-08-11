@@ -1,10 +1,10 @@
-export type LoginForm = {
+export interface LoginForm {
   email: string;
   password: string;
 }
 
 
-export type UserDto = {
+export interface User {
   id: number;
   email: string;
   name: string;
