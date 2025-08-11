@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import AddProduct from './pages/product/AddProduct';
 import Home from './pages/Home';
 import Gnb from "./pages/Gnb";
+import ViewProduct from './pages/product/ViewProduct';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/lpp-react" element={<Home />} />
         <Route path="/lpp-react/login" element={<Login />} />
         <Route path="/lpp-react/product/add" element={<AddProduct />} />
+        <Route path="/lpp-react/product/:id" element={<ViewProduct />} />
       </Routes>
     </div>
   );

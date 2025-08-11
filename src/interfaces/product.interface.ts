@@ -18,6 +18,8 @@ export interface Product {
   price: number;
   description: string;
   productImages: ProductImage[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductImage {
@@ -25,8 +27,8 @@ export interface ProductImage {
   productId: number;
   storeName: string;
   uploadName: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PaginationResponse<T> {

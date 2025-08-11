@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import {ApiResponse} from "../interfaces/api-response.interface";
 import {PaginationResponse, Product} from "../interfaces/product.interface";
-import Pagination from '../components/Pagination'; // Import the Pagination component
+import Pagination from '../components/Pagination';
+import {Link} from "react-router-dom"; // Import the Pagination component
 
 const Home: React.FC = () => {
   const [productResponse, setProductResponse] = useState<PaginationResponse<Product> | null>(null);
@@ -41,7 +42,8 @@ const Home: React.FC = () => {
           <>
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
               {productResponse?.items?.map((product) => (
-                <a key={product.id} href={`/product/${product.id}`} className="group">
+                <Link key={product.id} to={`/lpp-react/product/${product.id}`} className="group">
+
                   <div>
                     {product.productImages.length === 0 ? (
                       <img src={`${process.env.REACT_APP_URL}/images/no-image.png`} alt="Not Available"
@@ -53,7 +55,8 @@ const Home: React.FC = () => {
                   </div>
                   <h3 className="mt-4 text-lg text-gray-700 text-left">{product.name}</h3>
                   <p className="mt-1 text-md font-medium text-gray-900 text-left">\{product.price}</p>
-                </a>
+
+                </Link>
               ))}
             </div>
             <div id="pagination" className="mt-10">
