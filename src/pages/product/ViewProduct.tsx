@@ -13,18 +13,18 @@ const ViewProduct: React.FC = () => {
   const [productOffers, setProductOffers] = useState<ProductOffer[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const response = await axios.get<ApiResponse<ProductDetailResponse>>(`${process.env.REACT_APP_API_URL}/product/${id}`);
-        setProduct(response.data.data.product);
-        setProductOffers(response.data.data.productOffers);
-      } catch (err) {
-        console.error('Failed to fetch product:', err);
-        setError('Failed to load product details. Please try again later.');
-      }
-    };
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get<ApiResponse<ProductDetailResponse>>(`${process.env.REACT_APP_API_URL}/product/${id}`);
+      setProduct(response.data.data.product);
+      setProductOffers(response.data.data.productOffers);
+    } catch (err) {
+      console.error('Failed to fetch product:', err);
+      setError('Failed to load product details. Please try again later.');
+    }
+  };
 
+  useEffect(() => {
     if (id) {
       fetchProduct();
     }
@@ -92,7 +92,7 @@ const ViewProduct: React.FC = () => {
 
               <p className="text-gray-700 mb-6 text-left">{product.description}</p>
               <ViewProductOffer productOffers={productOffers} registrant={product.registrant}/>
-              <ViewProductOfferForm productId={product.id}/>
+              <ViewProductOfferForm productId={product.id} onOfferSubmitted={fetchProduct}/>
             </div>
         </div>
       </div>

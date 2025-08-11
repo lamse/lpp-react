@@ -12,10 +12,11 @@ interface ProductOfferForm {
 
 interface ViewProductOfferFormProps {
   productId: number;
+  onOfferSubmitted: () => Promise<void>;
 }
 
 
-const ViewProductOfferForm: React.FC<ViewProductOfferFormProps> = ({ productId }) => {
+const ViewProductOfferForm: React.FC<ViewProductOfferFormProps> = ({ productId, onOfferSubmitted }) => {
 
   const initialValues: ProductOfferForm = {
     price: 0,
@@ -36,6 +37,7 @@ const ViewProductOfferForm: React.FC<ViewProductOfferFormProps> = ({ productId }
       const apiResponse: ApiResponse<ProductOffer> = response.data;
       resetForm();
       console.log(apiResponse);
+      await onOfferSubmitted();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const apiResponse = error.response.data as ApiResponse<null>;
