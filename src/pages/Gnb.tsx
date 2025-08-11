@@ -23,7 +23,7 @@ const Gnb = () => {
       <div className='w-full py-3 border-b'>
         <div className='flex justify-between px-20 items-center font-semibold'>
           <div>
-            <h1 className="text-2xl">LPP</h1>
+            <h1 className="text-2xl">LPP - React</h1>
           </div>
           <div className='flex xl:gap-10 md:gap-8  gap-2'>
             <Link to="/lpp-react/">Home</Link>

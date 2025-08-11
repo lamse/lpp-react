@@ -1,0 +1,1 @@
+export type EnumYN = 'Y' | 'N';
