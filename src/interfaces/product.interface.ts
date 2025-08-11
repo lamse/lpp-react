@@ -28,3 +28,13 @@ export interface ProductImage {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface PaginationResponse<T> {
+  items: T[];
+  first: boolean;
+  number: number;
+  size: number;
+  totalPages: number;
+  last: boolean;
+  totalElements: number;
+}

@@ -7,15 +7,9 @@ const withAuth = <P extends object>(WrappedComponent: React.ComponentType<P>) =>
   const WithAuthComponent: React.FC<P> = (props) => {
     const { isLoggedIn, logout } = useAuthStore();
     const navigate = useNavigate();
-    const isMounted = useRef(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      if (isMounted.current) {
-        return;
-      }
-      isMounted.current = true;
-
       const checkAuth = async () => {
         if (!isLoggedIn) {
           navigate('/lpp-react/login');
