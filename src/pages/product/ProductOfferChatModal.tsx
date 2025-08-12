@@ -26,7 +26,7 @@ const ProductOfferChatModal: React.FC<ProductOfferChatModalProps> = ({ isOpen, o
           <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
         </div>
 
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full w-1/2 p-6">
+        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-11/12 max-w-5xl p-6">
           <div className="flex justify-end mb-4">
             <button onClick={onClose} className="text-gray-700 hover:text-red-500">
               <Close/>
