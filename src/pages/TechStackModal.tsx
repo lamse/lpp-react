@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Close from '@mui/icons-material/Close';
 
 interface TechStackModalProps {
@@ -7,14 +7,45 @@ interface TechStackModalProps {
 }
 
 const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose }) => {
-  if (!isOpen) {
+  const [shouldRender, setShouldRender] = useState(false);
+  const [opacityClass, setOpacityClass] = useState('opacity-0');
+
+  useEffect(() => {
+    let openTimer: NodeJS.Timeout;
+    let closeTimer: NodeJS.Timeout;
+
+    if (isOpen) {
+      setShouldRender(true); // Start rendering the component
+      openTimer = setTimeout(() => {
+        setOpacityClass('opacity-100'); // After a tiny delay, apply full opacity
+      }, 10); // Small delay to allow initial render with opacity-0
+    } else {
+      setOpacityClass('opacity-0'); // Start fading out
+      closeTimer = setTimeout(() => {
+        setShouldRender(false); // Unmount after transition
+      }, 300); // Match CSS transition duration
+    }
+
+    return () => {
+      clearTimeout(openTimer);
+      clearTimeout(closeTimer);
+    };
+  }, [isOpen]);
+
+  if (!shouldRender) {
     return null;
   }
 
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto mt-4">
+    <div
+      className={`fixed z-10 inset-0 overflow-y-auto transition-opacity duration-300 ease-in-out ${opacityClass}`}
+      onClick={onClose} // Click outside to close
+    >
       <div className="flex items-center justify-end mr-52">
-        <div className="bg-white w-1/2 p-6 rounded shadow-md border">
+        <div
+          className="bg-white w-1/2 p-6 rounded shadow-md border"
+          onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
+        >
           <div className="flex justify-end mb-4">
             <button onClick={onClose} className="text-gray-700 hover:text-red-500">
               <Close/>
