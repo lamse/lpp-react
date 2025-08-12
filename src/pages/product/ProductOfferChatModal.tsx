@@ -12,7 +12,7 @@ interface ProductOfferChatModalProps {
   onClose: () => void;
   offerId: number;
   chats: ProductOfferChat[];
-  onCommentSubmitted: () => void;
+  onCommentSubmitted: () => Promise<void>;
 }
 
 const ProductOfferChatModal: React.FC<ProductOfferChatModalProps> = ({ isOpen, onClose, offerId, chats, onCommentSubmitted }) => {
@@ -38,7 +38,7 @@ const ProductOfferChatModal: React.FC<ProductOfferChatModalProps> = ({ isOpen, o
       await axios.post(`${process.env.REACT_APP_API_URL}/product/offer/chat/${offerId}`, {comment});
       setComment('');
       setCommentErrorMessage('');
-      onCommentSubmitted();
+      await onCommentSubmitted();
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const apiResponse = error.response.data as ApiResponse<null>;
@@ -57,6 +57,15 @@ const ProductOfferChatModal: React.FC<ProductOfferChatModalProps> = ({ isOpen, o
       console.error('Error posting comment:', error);
     }
   };
+
+  const handleDeleteChat = async (chatId: number) => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/product/offer/chat/${chatId}/delete`);
+      await onCommentSubmitted();
+    } catch (error) {
+      console.error('Error deleting chat:', error);
+    }
+  }
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -87,7 +96,7 @@ const ProductOfferChatModal: React.FC<ProductOfferChatModalProps> = ({ isOpen, o
                     </div>
 
                     {loggedInUserId === chat.user.id && (
-                      <button className="text-gray-500 hover:text-red-500">
+                      <button onClick={() => handleDeleteChat(chat.id)} className="text-gray-500 hover:text-red-500">
                         <Delete/>
                       </button>
                     )}
