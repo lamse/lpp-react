@@ -3,13 +3,27 @@ import {ProductOffer} from "../../interfaces/product.interface";
 import Chat from '@mui/icons-material/Chat';
 import ThumbUp from '@mui/icons-material/ThumbUp';
 import DoneAll from '@mui/icons-material/DoneAll';
+import axios from "../../api/axios";
 
 interface ProductOfferProps {
+  productId: number;
   registrant?: boolean;
   productOffers: ProductOffer[];
+  onOfferChosen: () => void;
 }
 
-const ViewProductOffer: React.FC<ProductOfferProps> = ({registrant, productOffers}) => {
+const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, productOffers, onOfferChosen}) => {
+
+  const handleChooseOffer = async (id: number) => {
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/product/${productId}/offer/choose/${id}`);
+      onOfferChosen();
+    } catch (error) {
+
+      console.error('Error choosing offer:', error);
+    }
+  };
+
   return (
     <div>
       <h3 className="text-lg font-semibold mb-2 text-left">offering lower prices</h3>
@@ -29,12 +43,12 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({registrant, productOffer
                   <span className="text-gray-500">{productOffer.user.name}</span> |
                   <span className="text-gray-600 text-sm pl-1">{productOffer.createdAt.substring(0, 16)}</span>
                 </div>
-                <button className="openChat ml-2" data-id="${productOffer.id}" type="button">
+                <button className="openChat ml-2" data-id="{productOffer.id}" type="button">
                   <Chat/>
                 </button>
               </div>
               {registrant && productOffer.choose !== 'Y' && (
-                <button type="submit">
+                <button type="button" onClick={() => handleChooseOffer(productOffer.id)}>
                   <ThumbUp className="text-blue-500 hover:text-blue-600"/>
                 </button>
               )}

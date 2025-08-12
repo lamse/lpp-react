@@ -91,7 +91,11 @@ const ViewProduct: React.FC = () => {
               </div>
 
               <p className="text-gray-700 mb-6 text-left">{product.description}</p>
-              <ViewProductOffer productOffers={productOffers} registrant={product.registrant}/>
+              <ViewProductOffer
+                productId={product.id}
+                productOffers={productOffers}
+                registrant={product.registrant}
+                onOfferChosen={fetchProduct}/>
               <ViewProductOfferForm productId={product.id} onOfferSubmitted={fetchProduct}/>
             </div>
         </div>
