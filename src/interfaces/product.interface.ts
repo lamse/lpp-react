@@ -19,6 +19,7 @@ export interface Product {
   price: number;
   description: string;
   productImages: ProductImage[];
+  productOfferCount?: number;
   registrant?: boolean;
   createdAt: string;
   updatedAt: string;

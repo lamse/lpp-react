@@ -66,9 +66,20 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, p
                   <span className="text-gray-500 ml-1">{productOffer.user.name}</span> |
                   <span className="text-gray-600 text-sm pl-1">{productOffer.createdAt.substring(0, 16)}</span>
                 </div>
-                <button className="openChat ml-2" type="button" onClick={() => handleOpenChatModal(productOffer.id)}>
-                  <Chat/>
-                </button>
+                <div className="relative p-2 rounded-lg -mt-2">
+                  <button className="openChat ml-2" type="button" onClick={() => handleOpenChatModal(productOffer.id)}>
+                    <Chat/>
+                  </button>
+                  { productOffer.productOfferChats.length > 0 && (
+                    <div
+                      className="px-1 py-1 min-w-5 rounded-full text-center text-white text-xs absolute -top-2 -end-1 translate-x-1/4 text-nowrap">
+                      <div
+                        className="inline-flex items-center px-1.5 py-0.5 border-2 border-white rounded-full text-xs font-semibold leading-4 bg-red-400 text-white">
+                        {productOffer.productOfferChats.length}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               {registrant && productOffer.choose !== 'Y' && (
                 <button type="button" onClick={() => handleChooseOffer(productOffer.id)}>

@@ -42,7 +42,13 @@ const Home: React.FC = () => {
           <>
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
               {productResponse?.items?.map((product) => (
-                <Link key={product.id} to={`/lpp-react/product/${product.id}`} className="group">
+                <div key={product.id} className="relative">
+                  { product.productOfferCount !== undefined && product.productOfferCount > 0 && (
+                    <span className="absolute top-6 right-2 bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                    {product.productOfferCount} offers
+                  </span>
+                  )}
+                <Link to={`/lpp-react/product/${product.id}`} className="group">
 
                   <div>
                     {product.productImages.length === 0 ? (
@@ -57,6 +63,7 @@ const Home: React.FC = () => {
                   <p className="mt-1 text-md font-medium text-gray-900 text-left">\{product.price.toLocaleString()}</p>
 
                 </Link>
+                </div>
               ))}
             </div>
             <div id="pagination" className="mt-10">

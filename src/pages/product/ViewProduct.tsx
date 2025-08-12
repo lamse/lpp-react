@@ -84,7 +84,7 @@ const ViewProduct: React.FC = () => {
             </div>
             <p className="text-left">Model No: <span className="text-gray-600">{product.modelNo}</span></p>
             <p className="text-left">Registrant: <span className="text-gray-600">{product.user.name}</span></p>
-              <p className="mb-4 text-left">Registration date: <span className="text-gray-600 text-sm">{product.createdAt}</span>
+              <p className="mb-4 text-left">Registration date: <span className="text-gray-600 text-sm">{product.createdAt.substring(0, 16)}</span>
               </p>
               <div className="mb-4 text-left">
                 <span className="text-2xl font-bold mr-2">\{product.price.toLocaleString()}</span>
