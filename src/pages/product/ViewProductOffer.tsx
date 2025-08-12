@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {ProductOffer, ProductOfferChat} from "../../interfaces/product.interface";
 import Chat from '@mui/icons-material/Chat';
 import ThumbUp from '@mui/icons-material/ThumbUp';
@@ -10,25 +10,26 @@ interface ProductOfferProps {
   productId: number;
   registrant?: boolean;
   productOffers: ProductOffer[];
-  onOfferChosen: () => void;
+  onFetchProduct: () => Promise<void>;
 }
 
-const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, productOffers, onOfferChosen}) => {
+const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, productOffers, onFetchProduct}) => {
 
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
-  const [selectedOfferId, setSelectedOfferId] = useState<number | null>(null);
+  const [selectedOfferId, setSelectedOfferId] = useState<number>(0);
   const [chats, setChats] = useState<ProductOfferChat[]>([]);
 
   const handleChooseOffer = async (id: number) => {
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/product/${productId}/offer/choose/${id}`);
-      onOfferChosen();
+      await onFetchProduct();
     } catch (error) {
       console.error('Error choosing offer:', error);
     }
   };
 
-  const handleOpenChatModal = (offerId: number, productOfferChats: ProductOfferChat[]) => {
+  const handleOpenChatModal = (offerId: number) => {
+    const productOfferChats: ProductOfferChat[]  = productOffers.find(offer => offer.id === offerId)?.productOfferChats || [];
     setChats(productOfferChats);
     setSelectedOfferId(offerId);
     setIsChatModalOpen(true);
@@ -37,8 +38,14 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, p
   const handleCloseChatModal = () => {
     setChats([]);
     setIsChatModalOpen(false);
-    setSelectedOfferId(null);
+    setSelectedOfferId(0);
   };
+
+  useEffect(() => {
+    if (selectedOfferId > 0) {
+      handleOpenChatModal(selectedOfferId);
+    }
+  }, [productOffers]);
 
   return (
     <div>
@@ -59,7 +66,7 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, p
                   <span className="text-gray-500">{productOffer.user.name}</span> |
                   <span className="text-gray-600 text-sm pl-1">{productOffer.createdAt.substring(0, 16)}</span>
                 </div>
-                <button className="openChat ml-2" type="button" onClick={() => handleOpenChatModal(productOffer.id, productOffer.productOfferChats)}>
+                <button className="openChat ml-2" type="button" onClick={() => handleOpenChatModal(productOffer.id)}>
                   <Chat/>
                 </button>
               </div>
@@ -82,7 +89,7 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, p
         isOpen={isChatModalOpen}
         onClose={handleCloseChatModal}
         offerId={selectedOfferId}
-
+        onCommentSubmitted={onFetchProduct}
       />
     </div>
   );

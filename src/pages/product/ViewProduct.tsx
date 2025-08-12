@@ -95,7 +95,7 @@ const ViewProduct: React.FC = () => {
                 productId={product.id}
                 productOffers={productOffers}
                 registrant={product.registrant}
-                onOfferChosen={fetchProduct}/>
+                onFetchProduct={fetchProduct}/>
               <ViewProductOfferForm productId={product.id} onOfferSubmitted={fetchProduct}/>
             </div>
         </div>
