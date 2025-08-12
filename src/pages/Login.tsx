@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       const response = await axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/login`, values);
       const apiResponse: ApiResponse<User> = response.data;
       console.log(apiResponse);
-      login();
+      login(apiResponse.data.id);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const apiResponse = error.response.data as ApiResponse<null>;

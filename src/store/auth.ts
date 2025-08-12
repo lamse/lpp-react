@@ -3,7 +3,8 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface AuthState {
   isLoggedIn: boolean;
-  login: () => void;
+  loggedInUserId: number;
+  login: (userId: number) => void;
   logout: () => void;
   _setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
@@ -12,12 +13,13 @@ const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       isLoggedIn: false,
-      login: () => {
-        set({ isLoggedIn: true });
+      loggedInUserId: 0,
+      login: (userId: number) => {
+        set({ isLoggedIn: true, loggedInUserId: userId });
         localStorage.setItem('auth-storage-sync', JSON.stringify({ isLoggedIn: true, ts: Date.now() }));
       },
       logout: () => {
-        set({ isLoggedIn: false });
+        set({ isLoggedIn: false, loggedInUserId: 0 });
         localStorage.setItem('auth-storage-sync', JSON.stringify({ isLoggedIn: false, ts: Date.now() }));
       },
       _setIsLoggedIn: (isLoggedIn: boolean) => set({ isLoggedIn }),
