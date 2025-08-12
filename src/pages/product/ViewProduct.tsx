@@ -87,7 +87,7 @@ const ViewProduct: React.FC = () => {
               <p className="mb-4 text-left">Registration date: <span className="text-gray-600 text-sm">{product.createdAt}</span>
               </p>
               <div className="mb-4 text-left">
-                <span className="text-2xl font-bold mr-2">\{product.price}</span>
+                <span className="text-2xl font-bold mr-2">\{product.price.toLocaleString()}</span>
               </div>
 
               <p className="text-gray-700 mb-6 text-left">{product.description}</p>

@@ -54,7 +54,7 @@ const Home: React.FC = () => {
                     )}
                   </div>
                   <h3 className="mt-4 text-lg text-gray-700 text-left">{product.name}</h3>
-                  <p className="mt-1 text-md font-medium text-gray-900 text-left">\{product.price}</p>
+                  <p className="mt-1 text-md font-medium text-gray-900 text-left">\{product.price.toLocaleString()}</p>
 
                 </Link>
               ))}

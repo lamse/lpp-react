@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import axios from '../../api/axios';
 import withAuth from '../../components/withAuth';
 import {ProductForm} from "../../interfaces/product.interface";
+import {useNavigate} from "react-router-dom";
 
 const AddProduct: React.FC = () => {
   const initialValues: ProductForm = {
@@ -24,6 +25,7 @@ const AddProduct: React.FC = () => {
     imageFiles: Yup.array().min(1, 'At least one image is required'),
   });
 
+  const navigate = useNavigate();
   const handleSubmit = async (values: ProductForm, { setSubmitting }: FormikHelpers<ProductForm>) => {
     const formData = new FormData();
     formData.append('name', values.name);
@@ -38,6 +40,7 @@ const AddProduct: React.FC = () => {
     try {
       await axios.post(`${process.env.REACT_APP_API_URL}/product/add`, formData);
       alert('Product added successfully!');
+      navigate('/lpp-react');
     } catch (error) {
       console.error('There was an error!', error);
       alert('An unexpected error occurred!');
