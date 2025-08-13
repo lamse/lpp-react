@@ -1,5 +1,13 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import {Cookies} from 'react-cookie';
+
+const cookies = new Cookies();
+// Clear auth state from previous session on new session start
+if (!cookies.get('session_started')) {
+  cookies.set('session_started', true);
+  localStorage.removeItem('auth-storage-sync');
+}
 
 interface AuthState {
   isLoggedIn: boolean;
