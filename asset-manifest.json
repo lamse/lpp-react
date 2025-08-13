@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/lpp-react/static/css/main.91d779d6.css",
-    "main.js": "/lpp-react/static/js/main.00dcaf47.js",
+    "main.js": "/lpp-react/static/js/main.f0594014.js",
     "static/js/453.d909badf.chunk.js": "/lpp-react/static/js/453.d909badf.chunk.js",
     "index.html": "/lpp-react/index.html",
     "main.91d779d6.css.map": "/lpp-react/static/css/main.91d779d6.css.map",
-    "main.00dcaf47.js.map": "/lpp-react/static/js/main.00dcaf47.js.map",
+    "main.f0594014.js.map": "/lpp-react/static/js/main.f0594014.js.map",
     "453.d909badf.chunk.js.map": "/lpp-react/static/js/453.d909badf.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.91d779d6.css",
-    "static/js/main.00dcaf47.js"
+    "static/js/main.f0594014.js"
   ]
 }
