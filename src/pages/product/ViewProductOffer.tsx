@@ -55,7 +55,7 @@ const ViewProductOffer: React.FC<ProductOfferProps> = ({productId, registrant, p
         <li key={productOffer.id}>
           <div className="px-2 py-2 sm:px-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">\{productOffer.price.toLocaleString()}</h3>
+              <h3 className="text-lg leading-6 text-gray-900 font-bold">\{productOffer.price.toLocaleString()}</h3>
               <p className="mt-1 max-w-2xl text-sm text-gray-500">
                 <a href={productOffer.url} target="_blank" rel="noreferrer">{productOffer.url}</a>
               </p>
