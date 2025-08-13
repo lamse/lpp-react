@@ -75,6 +75,7 @@ const Login: React.FC = () => {
                     id="email"
                     name="email"
                     type="email"
+                    placeholder="guest@guest.com"
                     className="block w-full rounded-md px-3 py-1.5 border border-gray-300"
                   />
                   <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1" />
@@ -90,6 +91,7 @@ const Login: React.FC = () => {
                     id="password"
                     name="password"
                     type="password"
+                    placeholder="password"
                     className="block w-full rounded-md bg-white px-3 py-1.5 border border-gray-300"
                   />
                   <ErrorMessage name="password" component="div" className="text-red-500 text-xs mt-1" />
@@ -106,10 +108,10 @@ const Login: React.FC = () => {
           )}
         </Formik>
 
-        <p className="mt-10 text-center text-sm/6 text-gray-500">
-          Not a member?
-          <a href="/join" className="font-semibold text-indigo-600 hover:text-indigo-500">Register</a>
-        </p>
+        {/*<p className="mt-10 text-center text-sm/6 text-gray-500">*/}
+        {/*  Not a member?*/}
+        {/*  <a href="/join" className="font-semibold text-indigo-600 hover:text-indigo-500">Register</a>*/}
+        {/*</p>*/}
       </div>
     </div>
   );
