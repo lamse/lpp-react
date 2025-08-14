@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import axios from '../../api/axios';
 import { ApiResponse } from '../../interfaces/api-response.interface';
 import {ProductOffer} from "../../interfaces/product.interface";
+import {toast} from "react-toastify";
 
 interface ProductOfferForm {
   price: number;
@@ -32,26 +33,35 @@ const ViewProductOfferForm: React.FC<ViewProductOfferFormProps> = ({ productId, 
   });
 
   const handleSubmit = async (values: ProductOfferForm, { setSubmitting, setErrors, resetForm }: FormikHelpers<ProductOfferForm>) => {
-    try {
-      const response = await axios.post<ApiResponse<ProductOffer>>(`${process.env.REACT_APP_API_URL}/product/${productId}/offer`, values);
-      const apiResponse: ApiResponse<ProductOffer> = response.data;
-      resetForm();
-      console.log(apiResponse);
-      await onOfferSubmitted();
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const apiResponse = error.response.data as ApiResponse<null>;
-        if (apiResponse && apiResponse.errors) {
-          setErrors(apiResponse.errors);
+    await toast.promise(
+      axios.post<ApiResponse<ProductOffer>>(`${process.env.REACT_APP_API_URL}/product/${productId}/offer`, values),
+      {
+        pending: 'Submitting your offer...',
+        success: {
+          render({data}) {
+            const apiResponse: ApiResponse<ProductOffer> = data.data;
+            resetForm();
+            console.log(apiResponse);
+            return 'Your offer has been submitted successfully!';
+          }
+        },
+        error: {
+          render({data}) {
+            let errorMessage = 'An error occurred while submitting your offer.';
+            if (axios.isAxiosError(data) && data.response) {
+              const apiResponse = data.response.data as ApiResponse<null>;
+              if (apiResponse && apiResponse.errors) {
+                errorMessage = (apiResponse.errors as { global?: string }).global ?? errorMessage;
+                setErrors(apiResponse.errors);
+              }
+            } else {
+              console.error('There was an error!', data);
+            }
+            return errorMessage;
+          }
         }
-      } else {
-        console.error('There was an error!', error);
-        alert('An unexpected error occurred!');
       }
-    } finally {
-      setSubmitting(false);
-    }
-
+    ).finally(() => setSubmitting(false));
   };
 
   return (
@@ -64,41 +74,37 @@ const ViewProductOfferForm: React.FC<ViewProductOfferFormProps> = ({ productId, 
       >
         {({ isSubmitting, errors }) => (
           <Form>
-          {(errors as { global?: string }).global && (
-            <div className="text-red-500 text-xs mt-1">{(errors as { global?: string }).global}</div>
-          )}
+            <div className="mb-4">
+              <label htmlFor="url" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                URL
+              </label>
+              <Field
+                id="url"
+                name="url"
+                type="url"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+              <ErrorMessage name="url" component="div" className="text-red-500 text-xs mt-1" />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="price" className="block text-gray-700 text-sm font-bold mb-2 text-left">
+                Price
+              </label>
+              <Field
+                id="price"
+                name="price"
+                type="number"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              />
+              <ErrorMessage name="price" component="div" className="text-red-500 text-xs mt-1" />
+            </div>
 
-        <div className="mb-4">
-          <label htmlFor="url" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-            URL
-          </label>
-          <Field
-            id="url"
-            name="url"
-            type="url"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-          <ErrorMessage name="url" component="div" className="text-red-500 text-xs mt-1" />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="price" className="block text-gray-700 text-sm font-bold mb-2 text-left">
-            Price
-          </label>
-          <Field
-            id="price"
-            name="price"
-            type="number"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
-          <ErrorMessage name="price" component="div" className="text-red-500 text-xs mt-1" />
-        </div>
-
-        <button
-          type="submit" disabled={isSubmitting}
-          className="bg-indigo-600 hover:bg-indigo-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-          Offer
-        </button>
-      </Form>
+            <button
+              type="submit" disabled={isSubmitting}
+              className="bg-indigo-600 hover:bg-indigo-700 w-full text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              Offer
+            </button>
+          </Form>
         )}
       </Formik>
     </div>

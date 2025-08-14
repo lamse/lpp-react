@@ -6,6 +6,7 @@ import {ApiResponse} from "../../interfaces/api-response.interface";
 import {useNavigate} from "react-router-dom";
 import useAuthStore from "../../store/auth";
 import {User} from "../../interfaces/user.interface";
+import {toast} from "react-toastify";
 
 interface JoinRequest {
   email: string;
@@ -31,28 +32,36 @@ const JoinForm: React.FC = () => {
   const { login } = useAuthStore();
   const navigate = useNavigate();
   const handleSubmit = async (values: JoinRequest, { setSubmitting, setErrors, resetForm }: FormikHelpers<JoinRequest>) => {
-    try {
-      const response = await axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/join`, values);
-      const apiResponse: ApiResponse<User> = response.data;
-      resetForm();
-      console.log(apiResponse);
-      alert('Your membership registration has been completed.');
-      login(apiResponse.data.id);
-      navigate('/lpp-react');
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const apiResponse = error.response.data as ApiResponse<null>;
-        if (apiResponse && apiResponse.errors) {
-          setErrors(apiResponse.errors);
+    await toast.promise(
+      axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/join`, values),
+      {
+        pending: 'Processing membership registration...',
+        success: {
+          render({data}){
+            const apiResponse: ApiResponse<User> = data.data;
+            resetForm();
+            login(apiResponse.data.id);
+            navigate('/lpp-react');
+            return 'Your membership registration has been completed.';
+          }
+        },
+        error: {
+          render({data}){
+            let errorMessage = 'An error occurred while registering.';
+            if (axios.isAxiosError(data) && data.response) {
+              const apiResponse = data.response.data as ApiResponse<null>;
+              if (apiResponse && apiResponse.errors) {
+                errorMessage = (apiResponse.errors as { global?: string }).global ?? errorMessage;
+                setErrors(apiResponse.errors);
+              }
+            } else {
+              console.error('There was an error!', data);
+            }
+            return errorMessage;
+          }
         }
-      } else {
-        console.error('There was an error!', error);
-        alert('An unexpected error occurred!');
       }
-    } finally {
-      setSubmitting(false);
-    }
-
+    ).finally(() => setSubmitting(false));
   };
 
   return (
@@ -69,9 +78,6 @@ const JoinForm: React.FC = () => {
         >
           {({ isSubmitting, errors }) => (
             <Form className="space-y-6">
-              {(errors as { global?: string }).global && (
-                <div className="text-red-500 text-xs mt-1">{(errors as { global?: string }).global}</div>
-              )}
               <div>
                 <label htmlFor="email" className="block text-md font-medium text-gray-900 text-left">Email address</label>
                 <div className="mt-2">

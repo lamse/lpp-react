@@ -7,11 +7,14 @@ import Home from './pages/Home';
 import Gnb from "./pages/Gnb";
 import ViewProduct from './pages/product/ViewProduct';
 import JoinForm from "./pages/user/JoinForm";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <div className="App">
       <Gnb/>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Navigate to="/lpp-react" />} />
         <Route path="/lpp-react" element={<Home />} />

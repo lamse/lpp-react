@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import TechStackModal from "./TechStackModal";
 import useAuthStore from "../store/auth";
 import axios from "../api/axios";
+import {toast} from "react-toastify";
 
 const Gnb = () => {
   const { isLoggedIn, logout } = useAuthStore();
@@ -10,14 +11,14 @@ const Gnb = () => {
 
   const [isTechStackModalOpen, setIsTechStackModalOpen] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/logout`);
+  const handleLogout = () => {
+    axios.post(`${process.env.REACT_APP_API_URL}/logout`).then(() => {
       logout();
       navigate('/lpp-react');
-    } catch (error) {
-      console.error('Logout failed', error);
-    }
+      toast.success('Logged out!');
+    }).catch((err) => {
+      toast.error(err.message);
+    });
   };
 
   return (

@@ -5,6 +5,7 @@ import axios from '../../api/axios';
 import withAuth from '../../components/withAuth';
 import {ProductForm} from "../../interfaces/product.interface";
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
 
 const AddProduct: React.FC = () => {
   const initialValues: ProductForm = {
@@ -37,16 +38,24 @@ const AddProduct: React.FC = () => {
       formData.append('imageFiles', file);
     });
 
-    try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/product/add`, formData);
-      alert('Product added successfully!');
-      navigate('/lpp-react');
-    } catch (error) {
-      console.error('There was an error!', error);
-      alert('An unexpected error occurred!');
-    } finally {
-      setSubmitting(false);
-    }
+    await toast.promise(
+      axios.post(`${process.env.REACT_APP_API_URL}/product/add`, formData),
+      {
+        pending: 'Registering product...',
+        success: {
+          render(){
+            navigate('/lpp-react');
+            return 'The product has been registered.';
+          }
+        },
+        error: {
+          render({data}){
+            console.error('There was an error!', data);
+            return 'An error occurred while registering the product.';
+          }
+        }
+      }
+    ).finally(() => setSubmitting(false));
   };
 
   return (

@@ -6,6 +6,7 @@ import axios from '../api/axios';
 import useAuthStore from '../store/auth';
 import {LoginForm, User} from "../interfaces/user.interface";
 import {ApiResponse} from "../interfaces/api-response.interface";
+import {toast} from "react-toastify";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -27,26 +28,35 @@ const Login: React.FC = () => {
     password: Yup.string().required('Please enter your password.'),
   });
 
-  const handleSubmit = async (values: LoginForm, { setSubmitting, setErrors }: FormikHelpers<LoginForm>) => {
-    try {
-      const response = await axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/login`, values);
-      const apiResponse: ApiResponse<User> = response.data;
-      console.log(apiResponse);
-      login(apiResponse.data.id);
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        const apiResponse = error.response.data as ApiResponse<null>;
-        if (apiResponse && apiResponse.errors) {
-          setErrors(apiResponse.errors);
+  const handleSubmit = async (values: LoginForm, { setSubmitting, setErrors,  }: FormikHelpers<LoginForm>) => {
+    await toast.promise(
+      axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/login`, values),
+      {
+        pending: 'Logging in...',
+        success: {
+          render({data}) {
+            const apiResponse: ApiResponse<User> = data.data;
+            login(apiResponse.data.id);
+            return 'Login successfully!';
+          }
+        },
+        error: {
+          render({data}) {
+            let errorMessage = 'Login failed!';
+            if (axios.isAxiosError(data) && data.response) {
+              const apiResponse = data.response.data as ApiResponse<null>;
+              if (apiResponse && apiResponse.errors) {
+                errorMessage = (apiResponse.errors as { global?: string }).global ?? errorMessage;
+                setErrors(apiResponse.errors);
+              }
+            } else {
+              console.error('There was an error!', data);
+            }
+            return errorMessage;
+          }
         }
-      } else {
-        console.error('There was an error!', error);
-        alert('An unexpected error occurred!');
       }
-    } finally {
-      setSubmitting(false);
-    }
-
+    ).finally(() => setSubmitting(false));
   };
 
   return (
@@ -63,9 +73,6 @@ const Login: React.FC = () => {
         >
           {({ isSubmitting, errors }) => (
             <Form className="space-y-6">
-              {(errors as { global?: string }).global && (
-                <div className="text-red-500 text-xs mt-1">{(errors as { global?: string }).global}</div>
-              )}
               <div>
                 <div className="flex items-center justify-between">
                   <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900 justify-between">Email address</label>
