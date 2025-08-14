@@ -3,9 +3,11 @@ import {ErrorMessage, Field, Form, Formik, FormikHelpers} from "formik";
 import * as yup from "yup";
 import axios from "../../api/axios";
 import {ApiResponse} from "../../interfaces/api-response.interface";
-import {ProductOffer} from "../../interfaces/product.interface";
+import {useNavigate} from "react-router-dom";
+import useAuthStore from "../../store/auth";
+import {User} from "../../interfaces/user.interface";
 
-interface JoinForm {
+interface JoinRequest {
   email: string;
   name: string;
   password: string;
@@ -13,7 +15,7 @@ interface JoinForm {
 
 const JoinForm: React.FC = () => {
 
-  const initialValues: JoinForm = {
+  const initialValues: JoinRequest = {
     email: '',
     name: '',
     password: '',
@@ -25,13 +27,18 @@ const JoinForm: React.FC = () => {
     password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   });
 
-  const handleSubmit = async (values: JoinForm, { setSubmitting, setErrors, resetForm }: FormikHelpers<JoinForm>) => {
-    console.log(values);
+
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+  const handleSubmit = async (values: JoinRequest, { setSubmitting, setErrors, resetForm }: FormikHelpers<JoinRequest>) => {
     try {
-      const response = await axios.post<ApiResponse<ProductOffer>>(`${process.env.REACT_APP_API_URL}/join`, values);
-      const apiResponse: ApiResponse<ProductOffer> = response.data;
+      const response = await axios.post<ApiResponse<User>>(`${process.env.REACT_APP_API_URL}/join`, values);
+      const apiResponse: ApiResponse<User> = response.data;
       resetForm();
       console.log(apiResponse);
+      alert('Your membership registration has been completed.');
+      login(apiResponse.data.id);
+      navigate('/lpp-react');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const apiResponse = error.response.data as ApiResponse<null>;
