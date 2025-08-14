@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 import {Formik, Form, Field, ErrorMessage, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import axios from '../api/axios';
@@ -110,7 +110,7 @@ const Login: React.FC = () => {
 
         <p className="mt-10 text-center text-sm/6 text-gray-500">
           Not a member?
-          <a href="/lpp-react/join" className="font-semibold text-indigo-600 hover:text-indigo-500">Register</a>
+          <Link to="/lpp-react/join" className="ml-1 font-semibold text-indigo-600 hover:text-indigo-500">Register</Link>
         </p>
       </div>
     </div>
