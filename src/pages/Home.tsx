@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axios';
 import {ApiResponse} from "../interfaces/api-response.interface";
-import {PaginationResponse, Product} from "../interfaces/product.interface";
+import {PaginationResponse, Product, ProductSearchForm} from "../interfaces/product.interface";
 import Pagination from '../components/Pagination';
-import {Link} from "react-router-dom"; // Import the Pagination component
+import {Link} from "react-router-dom";
+import SearchForm from "./product/SearchForm"; // Import the Pagination component
 
 const Home: React.FC = () => {
   const [productResponse, setProductResponse] = useState<PaginationResponse<Product> | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const pageSize = 8;
+  const [form, setForm] = useState<ProductSearchForm>({
+    page: 0,
+    minPrice: '',
+    maxPrice: '',
+    query: '',
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<ApiResponse<PaginationResponse<Product>>>(`${process.env.REACT_APP_API_URL}/product?page=${currentPage}&size=${pageSize}`);
+        const response = await axios.get<ApiResponse<PaginationResponse<Product>>>(
+          `${process.env.REACT_APP_API_URL}/product?page=${form.page}&minPrice=${form.minPrice}&maxPrice=${form.maxPrice}&query=${form.query}`);
         setProductResponse(response.data.data);
       } catch (err) {
         console.error('Failed to fetch products:', err);
@@ -23,16 +29,21 @@ const Home: React.FC = () => {
     };
 
     fetchProducts();
-  }, [currentPage]);
+  }, [form]);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    setForm({...form, page});
   };
+
+  const handleSearch = (searchForm: ProductSearchForm) => {
+    setForm(searchForm);
+  }
 
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-5">Please find the lowest price!</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-5 text-left">Please find the lowest price!</h2>
+        <SearchForm handleSearch={handleSearch}/>
         {error && <p className="error-message">{error}</p>}
         {!productResponse && !error ? (
           <p>Loading products...</p>

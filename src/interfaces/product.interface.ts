@@ -69,3 +69,10 @@ export interface ProductOfferChat {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface ProductSearchForm {
+  page:number;
+  minPrice: number | string;
+  maxPrice: number | string;
+  query: string;
+}
