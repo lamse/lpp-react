@@ -72,12 +72,6 @@ const TechStackModal: React.FC<TechStackModalProps> = ({ isOpen, onClose }) => {
             </div>
             <div
               className="flex flex-col items-center p-4 bg-gray-600 rounded-xl shadow-lg transition transform hover:scale-105 hover:bg-gray-500">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/reactrouter/reactrouter-original.svg"
-                   alt="React Router" className="w-12 h-12 mb-2"/>
-              <span className="text-gray-300">React Router</span>
-            </div>
-            <div
-              className="flex flex-col items-center p-4 bg-gray-600 rounded-xl shadow-lg transition transform hover:scale-105 hover:bg-gray-500">
               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg"
                    alt="TailwindCSS" className="w-12 h-12 mb-2"/>
               <span className="text-gray-300">TailwindCSS</span>
